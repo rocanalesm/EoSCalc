@@ -1,5 +1,5 @@
 /* ============================================================
-   EOS Calc — Motor numérico
+   EoSCalc — Motor numérico
    Constantes, solucionador de cúbica, base de datos, EOS
    ============================================================ */
 const R = 8.314472;        // J/(mol·K) — equivalentemente Pa·m³/(mol·K)

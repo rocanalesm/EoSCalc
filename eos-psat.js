@@ -1,5 +1,5 @@
 /* ============================================================
-   EOS Calc — Presión de saturación P_sat (Segura-Wisniak 1997)
+   EoSCalc — Presión de saturación P_sat (Segura-Wisniak 1997)
    • Baja T_r:  ξ ≥ ξ_min → init f^{L,0} (Ec. 32) + NR (Ec. 22)
    • Alta T_r:  ξ < ξ_min → init promedio espinodal (Ec. 27) + NR
    Ref: Segura, H.; Wisniak, J.

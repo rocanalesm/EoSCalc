@@ -1,4 +1,4 @@
-# EOS Calc v1.2
+# EoSCalc v1.2
 
 *Version en espanol: [README.md](README.md)*
 
@@ -67,7 +67,7 @@ permissions, not trademark ones.
 contributors, MIT license); its text is in `katex/LICENSE` and must be kept
 in any redistribution.
 
-**Suggested citation:** R. I. Canales M., *EOS Calc* v1.2, Separation
+**Suggested citation:** R. I. Canales M., *EoSCalc* v1.2, Separation
 Thermodynamics and Extraction Processes (STEP), Pontificia Universidad
 Catolica de Chile, 2026.
 

@@ -1,4 +1,4 @@
-/* EOS Calc — Internacionalización / Internationalization
+/* EoSCalc — Internacionalización / Internationalization
    ES por defecto, EN a un clic. Fuente única de todos los textos de la
    interfaz: si se agrega un texto nuevo, va acá y no en el HTML.
    Para agregar otro idioma, basta con una clave más en cada entrada.

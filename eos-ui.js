@@ -1,4 +1,4 @@
-/* EOS Calc — UI / Eventos / Render KaTeX */
+/* EoSCalc — UI / Eventos / Render KaTeX */
 const $ = (id) => document.getElementById(id);
 let LAST_CALC = null;
 
