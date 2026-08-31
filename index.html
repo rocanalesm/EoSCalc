@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1E3A5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="EOS Calc">
+<title>EOS Calc — Ecuaciones de Estado</title>
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script defer src="katex/katex.min.js"></script>
+<style>
+  /* =========================================================================
+     Paleta del curso IIQ2043 2026-2, identica a la de las laminas Beamer:
+       stepnavy #1E3A5F   stepblue #2B7BBA   stepteal #18A48C
+       stepgreen #62BD7E  ucred    #9B1A1A
+     Tema claro (fondo blanco) por defecto. El bloque prefers-color-scheme de
+     mas abajo redefine SOLO los roles, nunca los colores de marca.
+     ========================================================================= */
+  :root{
+    /* Colores de marca: iguales en los dos temas */
+    --navy:#1E3A5F; --blue:#2B7BBA; --teal:#18A48C; --green:#62BD7E;
+    --ucred:#9B1A1A;
+    /* Roles, tema claro */
+    --bg:#ffffff; --panel:#ffffff; --panel2:#f1f6f9; --panel3:#f7fafc;
+    --text:#16283d; --muted:#55677a;
+    --accent:#0f7a68;                     /* teal oscurecido: texto sobre blanco */
+    --accent-hi:#18A48C;
+    --accent-soft:rgba(24,164,140,.32);
+    --accent-wash:rgba(24,164,140,.08);
+    --btn-bg:#0f7a68; --btn-fg:#ffffff; --btn-hi:#0c6a5a;
+    --header-bg:#1E3A5F; --header-fg:#ffffff; --header-sub:#c3d4e4;
+    --border:#d8e0e7; --border-soft:#e8eef3;
+    --good:#2c7549; --good-fg:#ffffff; --good-wash:rgba(98,189,126,.18);
+    --warn:#a8620a; --bad:#9B1A1A;
+    --shadow:0 1px 2px rgba(30,58,95,.06), 0 1px 8px rgba(30,58,95,.05);
+    --btn-shadow:0 2px 8px rgba(15,122,104,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1b2a; --panel:#152a40; --panel2:#1c364f; --panel3:#0b1725;
+      --text:#e8f1f6; --muted:#a3b8ca;
+      --accent:#3fc9b0; --accent-hi:#5ad9c2;
+      --accent-soft:rgba(63,201,176,.38);
+      --accent-wash:rgba(24,164,140,.14);
+      --btn-bg:#18A48C; --btn-fg:#06231d; --btn-hi:#22bfa3;
+      --header-bg:#152a40; --header-fg:#ffffff; --header-sub:#a3b8ca;
+      --border:#26445f; --border-soft:#223b53;
+      --good:#7fd39a; --good-fg:#0e1b2a; --good-wash:rgba(98,189,126,.16);
+      --warn:#e0a33c; --bad:#f0908c;
+      --shadow:none;
+      --btn-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:15px;line-height:1.45;overscroll-behavior:none}
+  header{position:sticky;top:0;background:var(--header-bg);color:var(--header-fg);
+    padding:14px 16px;border-bottom:1px solid var(--header-bg);z-index:10;
+    display:flex;align-items:center;justify-content:space-between}
+  header h1{margin:0;font-size:18px;font-weight:600}
+  header .sub{font-size:12px;color:var(--header-sub)}
+  main{padding:14px;padding-bottom:80px;max-width:720px;margin:0 auto}
+  .card{background:var(--panel);border:1px solid var(--border);
+    border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 10px;font-size:14px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+  label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}
+  select,input[type=text],input[type=number]{width:100%;padding:11px 12px;
+    background:var(--panel2);color:var(--text);border:1px solid var(--border);
+    border-radius:8px;font-size:15px;font-family:inherit}
+  input:focus,select:focus{outline:none;border-color:var(--accent-hi);
+    box-shadow:0 0 0 3px var(--accent-wash)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+  button.primary{width:100%;padding:14px;background:var(--btn-bg);color:var(--btn-fg);
+    border:none;border-radius:10px;font-size:16px;font-weight:600;
+    margin-top:8px;cursor:pointer;box-shadow:var(--btn-shadow)}
+  button.primary:hover{background:var(--btn-hi)}
+  button.primary:active{opacity:.85}
+  .results{display:none}
+  .results.show{display:block}
+  table.props{width:100%;border-collapse:collapse;font-size:14px}
+  table.props td{padding:8px 6px;border-bottom:1px solid var(--border-soft)}
+  table.props td:first-child{color:var(--muted);width:55%}
+  table.props td:last-child{text-align:right;font-variant-numeric:tabular-nums;
+    font-family:"SF Mono",Menlo,monospace;font-size:13px}
+  .phase-badge{display:inline-block;padding:3px 10px;border-radius:12px;
+    font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+  .phase-vap{background:var(--blue);color:#fff}
+  .phase-liq{background:var(--navy);color:#fff}
+  .phase-sup{background:var(--teal);color:#06231d}
+  .phase-mix{background:var(--warn);color:#fff}
+  .err{color:var(--bad);font-size:13px;margin-top:6px}
+  .info{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.4}
+  .tabs{display:flex;gap:4px;margin-bottom:8px;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{padding:7px 12px;background:var(--panel2);color:var(--muted);
+    border:1px solid var(--border);border-radius:8px;font-size:12px;
+    white-space:nowrap;cursor:pointer}
+  .tabs button.active{background:var(--btn-bg);color:var(--btn-fg);
+    border-color:var(--btn-bg);font-weight:600}
+  .roots-info{font-size:12px;color:var(--muted);margin-top:8px;
+    padding:8px;background:var(--panel2);border-radius:6px;white-space:pre-line}
+  .footer{text-align:center;color:var(--muted);font-size:11px;
+    margin-top:20px;padding:14px;line-height:1.6}
+  .footer a{color:var(--accent);text-decoration:none}
+  .footer a:hover{text-decoration:underline}
+  .eos-eq{font-size:11px;color:var(--muted);margin-top:6px;font-style:italic}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{height:38px;width:auto;border-radius:6px;background:#fff;
+    padding:3px;flex-shrink:0}
+  .eq-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+    background:transparent;color:var(--accent);border:1px solid var(--accent-soft);
+    border-radius:8px;font-size:12px;cursor:pointer;margin-top:10px;
+    font-family:inherit}
+  .eq-toggle:hover{background:var(--accent-wash)}
+  .eq-toggle:active{opacity:.7}
+  .eq-toggle .arrow{transition:transform .2s;display:inline-block}
+  .eq-toggle.open .arrow{transform:rotate(90deg)}
+  .eq-panel{display:none;margin-top:10px;padding:12px;background:var(--panel3);
+    border:1px solid var(--border);border-radius:8px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .eq-panel.open{display:block}
+  .eq-panel .eq-block{margin:8px 0;line-height:1.5}
+  .eq-panel .eq-label{font-size:11px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .eq-panel .katex{font-size:1em}
+  .eq-panel .katex-display{margin:.4em 0;overflow-x:auto;overflow-y:hidden}
+  .eq-panel .note{font-size:11px;color:var(--muted);
+    margin-top:8px;font-style:italic;line-height:1.4}
+  .eq-panel .refs{font-size:11px;color:var(--muted);
+    margin-top:10px;padding-top:8px;border-top:1px solid var(--border);
+    line-height:1.4}
+  .eq-panel .refs-label{font-size:10px;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;
+    font-weight:600}
+  .eq-panel .refs ul{margin:0;padding-left:16px}
+  .eq-panel .refs li{margin:2px 0}
+  .roots-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  .roots-table th,.roots-table td{padding:6px 8px;text-align:right;
+    font-variant-numeric:tabular-nums;
+    font-family:"SF Mono",Menlo,monospace;font-size:12px}
+  .roots-table th{color:var(--muted);font-weight:600;text-align:center;
+    border-bottom:1px solid var(--border);font-family:inherit}
+  .roots-table td:first-child{text-align:left;color:var(--muted);
+    font-family:inherit;font-size:13px}
+  .roots-table .root-stable{background:var(--good-wash);
+    border-left:3px solid var(--good)}
+  .roots-table .root-stable td:first-child{color:var(--good);font-weight:600}
+  .roots-table .root-mid{opacity:.6;font-style:italic}
+  .roots-table .root-mid td:first-child{color:var(--warn)}
+  .stable-mark{display:inline-block;padding:1px 6px;background:var(--good);
+    color:var(--good-fg);border-radius:8px;font-size:10px;font-weight:700;
+    margin-left:4px;vertical-align:middle}
+  .stab-block{background:var(--accent-wash);border:1px solid var(--accent-soft);
+    border-radius:10px;padding:12px;margin:10px 0}
+  .stab-block .stab-title{font-size:11px;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;
+    font-weight:600}
+  .stab-block .stab-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr;
+    gap:6px;align-items:center;padding:5px 6px;border-radius:6px;
+    font-size:13px;font-variant-numeric:tabular-nums;margin:2px 0}
+  .stab-block .stab-row.win{background:var(--good-wash);
+    border-left:3px solid var(--good)}
+  .stab-block .stab-row.mid{opacity:.6;font-style:italic}
+  .stab-block .stab-row .lbl{color:var(--muted);font-weight:600}
+  .stab-block .stab-row.win .lbl{color:var(--good)}
+  .stab-block .stab-row .v{font-family:"SF Mono",Menlo,monospace;font-size:12px}
+  .stab-block .stab-row .v small{color:var(--muted);font-size:10px;display:block}
+  .stab-block .stab-conclusion{margin-top:10px;padding:8px 10px;
+    background:var(--good-wash);border-left:3px solid var(--good);
+    border-radius:4px;font-size:13px;line-height:1.5}
+  .stab-block .stab-conclusion strong{color:var(--good)}
+  /* Selector de idioma, en el encabezado */
+  #lang-toggle{background:transparent;color:var(--header-fg);
+    border:1px solid rgba(255,255,255,.45);
+    border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;letter-spacing:.05em;
+    cursor:pointer;font-family:inherit}
+  #lang-toggle:hover{background:#fff;color:var(--navy);border-color:var(--navy)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="step_logo.png" alt="STEP" onerror="this.style.display='none'">
+    <div>
+      <h1>EOS Calc</h1>
+      <div class="sub" data-i18n="app.subtitle">Ecuaciones de estado · propiedades residuales</div>
+    </div>
+  </div>
+  <button id="lang-toggle" type="button" title="Switch to English" aria-label="Switch to English">EN</button>
+</header>
+<main>
+
+<div class="card">
+  <h2 data-i18n="card.eos">Ecuación de estado</h2>
+  <select id="eos">
+    <option value="vdw">Van der Waals (1873)</option>
+    <option value="rk">Redlich-Kwong (1949)</option>
+    <option value="srk" selected>Soave-Redlich-Kwong (1972)</option>
+    <option value="pr">Peng-Robinson (1976)</option>
+    <option value="prsv">Peng-Robinson-Stryjek-Vera (1986)</option>
+    <option value="pt">Patel-Teja (1982)</option>
+    <option value="ptv">Patel-Teja-Valderrama (1990)</option>
+    <option value="csvdw" data-i18n="eos.noncubic">Carnahan-Starling-vdW (no cúbica)</option>
+  </select>
+  <div class="eos-eq" id="eos-eq"></div>
+  <button class="eq-toggle" id="eq-toggle-eos" type="button">
+    <span class="arrow">&#9656;</span> <span data-i18n="toggle.eos">Ver ecuaciones y parámetros</span>
+  </button>
+  <div class="eq-panel" id="eq-panel-eos"></div>
+</div>
+
+<div class="card">
+  <h2 data-i18n="card.component">Componente</h2>
+  <div class="tabs">
+    <button class="tab-btn active" data-mode="db" data-i18n="tab.db">Base de datos</button>
+    <button class="tab-btn" data-mode="manual" data-i18n="tab.manual">Manual</button>
+  </div>
+  <div id="mode-db">
+    <input type="text" id="search" data-i18n-ph="ph.search" placeholder="Buscar (ej: metano, agua, CO2)">
+    <select id="component" size="6" style="margin-top:8px;height:auto;font-family:inherit"></select>
+    <div class="info" id="comp-info"></div>
+  </div>
+  <div id="mode-manual" style="display:none">
+    <label data-i18n="lbl.name">Nombre (opcional)</label>
+    <input type="text" id="m-name" data-i18n-ph="ph.substance" placeholder="Mi sustancia">
+    <div class="row" style="margin-top:6px">
+      <div>
+        <label>Tc [K]</label>
+        <input type="number" id="m-tc" step="0.01" placeholder="190.56">
+      </div>
+      <div>
+        <label>Pc [bar]</label>
+        <input type="number" id="m-pc" step="0.01" placeholder="45.99">
+      </div>
+    </div>
+    <label data-i18n="lbl.omega">&omega; (factor acéntrico)</label>
+    <input type="number" id="m-omega" step="0.001" placeholder="0.011">
+  </div>
+</div>
+
+<div class="card">
+  <h2 data-i18n="card.conditions">Condiciones</h2>
+  <div class="row">
+    <div>
+      <label data-i18n="lbl.temperature">Temperatura</label>
+      <div class="row3">
+        <input type="number" id="T" step="0.01" value="300" placeholder="T">
+        <select id="T-unit">
+          <option value="K" selected>K</option>
+          <option value="C">&deg;C</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label data-i18n="lbl.pressure">Presión</label>
+      <div class="row3">
+        <input type="number" id="P" step="0.01" value="10" placeholder="P">
+        <select id="P-unit">
+          <option value="bar" selected>bar</option>
+          <option value="atm">atm</option>
+          <option value="kPa">kPa</option>
+          <option value="MPa">MPa</option>
+          <option value="psi">psi</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <button class="primary" id="calc" data-i18n="btn.calc">Calcular</button>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="results card" id="results">
+  <h2 data-i18n="card.results">Resultados</h2>
+  <div id="phase-line" style="margin-bottom:10px"></div>
+  <div id="stab-summary"></div>
+  <table class="props" id="props-table"></table>
+  <div class="roots-info" id="roots-info"></div>
+  <button class="eq-toggle" id="eq-toggle-res" type="button">
+    <span class="arrow">&#9656;</span> <span data-i18n="toggle.formulas">Ver fórmulas usadas</span>
+  </button>
+  <div class="eq-panel" id="eq-panel-res"></div>
+  <button class="eq-toggle" id="eq-toggle-vals" type="button">
+    <span class="arrow">&#9656;</span> <span data-i18n="toggle.values">Ver parámetros con valores numéricos</span>
+  </button>
+  <div class="eq-panel" id="eq-panel-vals"></div>
+</div>
+
+<div class="card">
+  <h2 data-i18n="card.psat">Presión de saturación (Segura-Wisniak)</h2>
+  <div class="info" style="margin-bottom:8px" data-i18n="psat.blurb">Para una T dada (T &lt; Tc), encuentra P<sup>sat</sup> imponiendo &phi;<sup>V</sup> = &phi;<sup>L</sup>. No aplica a CS-vdW.</div>
+  <label data-i18n="lbl.tsat">Temperatura de saturación</label>
+  <div class="row3">
+    <input type="number" id="T-sat" step="0.01" value="300" placeholder="T">
+    <select id="T-sat-unit">
+      <option value="K" selected>K</option>
+      <option value="C">&deg;C</option>
+    </select>
+  </div>
+  <button class="primary" id="calc-sat" data-i18n="btn.calcsat">Calcular P<sup>sat</sup></button>
+  <div class="err" id="err-sat"></div>
+  <div class="results" id="results-sat" style="margin-top:14px">
+    <table class="props" id="sat-table"></table>
+    <button class="eq-toggle" id="eq-toggle-sat" type="button">
+      <span class="arrow">&#9656;</span> <span data-i18n="toggle.iterations">Ver iteraciones y método</span>
+    </button>
+    <div class="eq-panel" id="eq-panel-sat"></div>
+  </div>
+</div>
+
+<div class="footer">
+  Separation Thermodynamics and Extraction Processes (STEP)<br>
+  <a href="http://step.ing.puc.cl" target="_blank" rel="noopener">step.ing.puc.cl</a> &middot; v1.2
+</div>
+
+</main>
+
+<script src="eos-i18n.js"></script>
+<script src="eos-engine.js"></script>
+<script src="eos-formulas.js"></script>
+<script src="eos-psat.js"></script>
+<script src="eos-ui.js"></script>
+</body>
+</html>
