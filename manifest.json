@@ -1,6 +1,6 @@
 {
-  "name": "EOS Calc — Ecuaciones de Estado",
-  "short_name": "EOS Calc",
+  "name": "EoSCalc (Ecuaciones de Estado)",
+  "short_name": "EoSCalc",
   "description": "Calculadora de ecuaciones de estado cubicas y propiedades residuales (VdW, RK, SRK, PR, PRSV, PT, PTV, CS-vdW). Interfaz bilingue espanol/ingles. | Cubic equations of state and residual properties, with a bilingual Spanish/English interface.",
   "start_url": "./index.html",
   "display": "standalone",
