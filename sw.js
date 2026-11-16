@@ -1,7 +1,7 @@
 /* Service Worker — EoSCalc
    Cachea los archivos para uso offline.
 */
-const CACHE = 'eos-calc-v1.2';   // sigue el numero de version de la app
+const CACHE = 'eos-calc-v1.2.1';   // sigue el numero de version de la app
 const ASSETS = [
   './',
   './index.html',

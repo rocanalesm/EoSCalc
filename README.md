@@ -1,4 +1,4 @@
-# EoSCalc v1.2
+# EoSCalc v1.2.1
 
 *English version: [README.en.md](README.en.md)*
 
@@ -49,7 +49,7 @@ visita.
 ## Para actualizar la app
 
 Reemplazar los archivos en el repositorio y **subir el numero de version
-del cache en `sw.js`** (la constante `CACHE`, hoy `eos-calc-v1.2`). Sin
+del cache en `sw.js`** (la constante `CACHE`, hoy `eos-calc-v1.2.1`). Sin
 ese cambio, a quien ya la tenga instalada le sigue apareciendo la version
 vieja. La convencion es que el cache lleve el mismo numero que la app.
 
@@ -68,7 +68,7 @@ licencia derechos de autor, no marcas.
 colaboradores, licencia MIT); su texto esta en `katex/LICENSE` y debe
 conservarse al redistribuir.
 
-**Cita sugerida:** R. I. Canales M., *EoSCalc* v1.2, Separation
+**Cita sugerida:** R. I. Canales M., *EoSCalc* v1.2.1, Separation
 Thermodynamics and Extraction Processes (STEP), Pontificia Universidad
 Catolica de Chile, 2026.
 

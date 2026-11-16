@@ -165,8 +165,8 @@ const FORMULAS = {
       "A = \\dfrac{aP}{R^2 T^2},\\;B = \\dfrac{bP}{RT}"
     ],
     cubic: "\\text{No es cúbica — se resuelve por iteración numérica en V.}",
-    HR:    "H^R = RT(Z-1) + RT\\left[\\dfrac{\\eta(4-3\\eta)}{(1-\\eta)^2} - \\dfrac{a}{RT\\,V}\\right]",
-    SR:    "S^R = R\\,\\ln Z",
+    HR:    "H^R = RT(Z-1) - \\dfrac{a}{V}",
+    SR:    "S^R = R\\left[\\ln Z - \\dfrac{\\eta(4-3\\eta)}{(1-\\eta)^2}\\right]",
     GR:    "G^R = H^R - T\\,S^R",
     lnPhi: "\\ln\\phi = \\dfrac{\\eta(4-3\\eta)}{(1-\\eta)^2} - \\dfrac{a}{RT\\,V} + (Z-1) - \\ln Z",
     note:  "note.csvdw",

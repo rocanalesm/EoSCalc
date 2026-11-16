@@ -394,8 +394,9 @@ const EOS_CSVDW = {
         const A_repRT = eta*(4 - 3*eta)/Math.pow(1-eta,2);
         const A_attRT = -a/(R*T*V);
         const AR_TV = A_repRT + A_attRT;
-        const SR = R*Math.log(Z);
-        const HR = R*T*(Z - 1 + AR_TV);
+        // A_rep/RT depende solo de eta (puramente entrópico): U^R = -a/V
+        const HR = R*T*(Z - 1) - a/V;
+        const SR = R*(Math.log(Z) - A_repRT);
         const GR = HR - T*SR;
         const lnPhi = AR_TV + (Z - 1) - Math.log(Z);
         return {HR, SR, GR, phi:Math.exp(lnPhi), lnPhi};
